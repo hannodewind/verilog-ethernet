@@ -452,11 +452,15 @@ always @* begin
     shift_payload_in = 1'b0;
 
     frame_ptr_next = frame_ptr_reg;
+	 checksum_part = 32'b0;
     checksum_next = checksum_reg;
     checksum_temp1_next = checksum_temp1_reg;
     checksum_temp2_next = checksum_temp2_reg;
 
     hdr_valid_next = 1'b0;
+	 
+	 word_cnt = 0;
+	 i = 0;
 
     case (state_reg)
         STATE_IDLE: begin
