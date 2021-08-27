@@ -275,23 +275,26 @@ def test_eth_mac_10g_fifo(request, data_width, enable_dic):
     parameters['TX_FIFO_DEPTH'] = 16384
     parameters['TX_FIFO_PIPELINE_OUTPUT'] = 2
     parameters['TX_FRAME_FIFO'] = 1
-    parameters['TX_DROP_BAD_FRAME'] = parameters['TX_FRAME_FIFO']
+    parameters['TX_DROP_OVERSIZE_FRAME'] = parameters['TX_FRAME_FIFO']
+    parameters['TX_DROP_BAD_FRAME'] = parameters['TX_DROP_OVERSIZE_FRAME']
     parameters['TX_DROP_WHEN_FULL'] = 0
     parameters['RX_FIFO_DEPTH'] = 16384
     parameters['RX_FIFO_PIPELINE_OUTPUT'] = 2
     parameters['RX_FRAME_FIFO'] = 1
-    parameters['RX_DROP_BAD_FRAME'] = parameters['RX_FRAME_FIFO']
-    parameters['RX_DROP_WHEN_FULL'] = parameters['RX_FRAME_FIFO']
+    parameters['RX_DROP_OVERSIZE_FRAME'] = parameters['RX_FRAME_FIFO']
+    parameters['RX_DROP_BAD_FRAME'] = parameters['RX_DROP_OVERSIZE_FRAME']
+    parameters['RX_DROP_WHEN_FULL'] = parameters['RX_DROP_OVERSIZE_FRAME']
     parameters['PTP_PERIOD_NS'] = 0x6 if parameters['DATA_WIDTH'] == 64 else 0x3
     parameters['PTP_PERIOD_FNS'] = 0x6666 if parameters['DATA_WIDTH'] == 64 else 0x3333
     parameters['PTP_USE_SAMPLE_CLOCK'] = 0
     parameters['TX_PTP_TS_ENABLE'] = 0
     parameters['RX_PTP_TS_ENABLE'] = 0
     parameters['TX_PTP_TS_FIFO_DEPTH'] = 64
-    parameters['RX_PTP_TS_FIFO_DEPTH'] = 64
     parameters['PTP_TS_WIDTH'] = 96
     parameters['TX_PTP_TAG_ENABLE'] = 0
     parameters['PTP_TAG_WIDTH'] = 16
+    parameters['TX_USER_WIDTH'] = (parameters['TX_PTP_TAG_WIDTH'] if parameters['TX_PTP_TS_ENABLE'] and parameters['TX_PTP_TAG_ENABLE'] else 0) + 1
+    parameters['RX_USER_WIDTH'] = (parameters['RX_PTP_TS_WIDTH'] if parameters['RX_PTP_TS_ENABLE'] else 0) + 1
 
     extra_env = {f'PARAM_{k}': str(v) for k, v in parameters.items()}
 
